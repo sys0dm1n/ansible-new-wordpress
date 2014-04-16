@@ -21,6 +21,7 @@ Role Variables
 * mysql_password: Root password
 * wp_version: Wordpress version
 * wp_sha256sum: The Wordpress sha 256 checksum
+
  #### Apache Virtualhost variables:
 * server_hostname: Website's domain name
 * server_alias: Website's domain alias
