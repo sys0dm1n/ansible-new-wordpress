@@ -3,8 +3,9 @@ Role Name
 
 Download wordpress 3.8.3 to the documentroot, creates MySQL database and create the Virtualhost for Apache.
 All you still need to do is enabling the virtualhost like follow:
- sudo a2ensite {{virtualhost_file_name}}
- sudo service apache2 reload
+
+  sudo a2ensite {{virtualhost_file_name}}
+  sudo service apache2 reload
 
 Requirements
 ------------
