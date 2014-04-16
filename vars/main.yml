@@ -1,0 +1,21 @@
+---
+# vars file for wordpress
+
+RootFolder: MyWebsite
+#
+# These are the Wordpress database settings
+wp_db_name: website
+wp_db_user: website
+wp_db_password: website_password
+mysql_user: root
+mysql_password: root_password
+
+#
+# Which version of Wordpress to deploy
+wp_version: 3.8.3
+wp_sha256sum: 8543e31d7c0a1b15f73dbb20f9161845f3d2bb8de3d7aef371cf32bba41747ee
+#
+# This is used for the Apache server configuration, but # access to the
+# Wordpress site is not restricted by a # named host.
+server_hostname: www.mywebsite.com
+server_alias: mywebsite.com cdn.mywebsite.com

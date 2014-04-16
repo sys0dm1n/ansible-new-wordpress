@@ -1,0 +1,45 @@
+---
+# tasks file for wordpress
+  - name: Check if path exists
+    stat: path=/var/sites
+    register: check_path
+
+  - name: Download Wordpress
+    get_url: url=http://wordpress.org/wordpress-{{ wp_version }}.tar.gz force=no dest=/var/sites/wordpress-{{ wp_version }}.tar.gz
+             sha256sum="{{ wp_sha256sum }}"
+    when: check_path.stat.exists
+
+  - name: Extract archive
+    command: chdir=/var/sites/ /bin/tar xvf wordpress-{{ wp_version }}.tar.gz creates=/var/sites/wordpress
+
+  - name: Remove wordpress-{{ wp_version }}.tar.gz
+    file: path=/var/sites/wordpress-{{ wp_version }}.tar.gz state=absent
+
+  - name: Fetch random salts for Wordpress config
+    local_action: command curl https://api.wordpress.org/secret-key/1.1/salt/
+    register: "wp_salt"
+    sudo: no
+
+  - name: Install python-mysqldb (required by ANSIBLE)
+    command: apt-get install python-mysqldb -y
+
+  - name: Create Wordpress database
+    mysql_db: login_user={{ mysql_user }} login_password={{ mysql_password }} name={{ wp_db_name }} state=present
+
+  - name: Create Wordpress database user
+    mysql_user: login_user={{ mysql_user }} login_password={{ mysql_password }} name={{ wp_db_user }} password={{ wp_db_password }} priv={{ wp_db_name }}.*:ALL host='localhost' state=present
+
+  - name: Rename Wordpress folder to {{ RootFolder }}
+    command: /bin/mv /var/sites/wordpress /var/sites/{{ RootFolder }}
+
+  - name: Copy Wordpress config file
+    template: src=wp-config.php dest=/var/sites/{{ RootFolder }}
+
+  - name: Change ownership of Wordpress installation
+    file: path=/var/sites/{{ RootFolder }} owner=root group=root state=directory recurse=yes
+
+  - name: Change ownership of Wordpress uploads installation
+    file: path=/var/sites/{{ RootFolder }}/wp-content/uploads/ owner=www-data group=www-data state=directory recurse=yes
+
+  - name: Apache create virtualhost file
+    template: src=apache_virtualhost dest=/etc/apache2/sites-available/{{ RootFolder }} owner=root group=root mode=0644

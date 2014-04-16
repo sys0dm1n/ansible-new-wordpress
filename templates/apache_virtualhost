@@ -1,0 +1,25 @@
+<VirtualHost *:80>
+	ServerAdmin {{server_hostname}}@domain.com
+	ServerName {{server_hostname}}
+	ServerAlias {{server_alias}}
+
+	DocumentRoot /var/sites/{{RootFolder}}
+
+	<Directory /var/sites/{{RootFolder}}/>
+		Options FollowSymLinks MultiViews Includes ExecCGI
+		AllowOverride none
+		Order allow,deny
+		allow from all
+		RewriteEngine On
+		RewriteBase /
+		RewriteRule ^index\.php$ - [L]
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteCond %{REQUEST_FILENAME} !-d
+		RewriteRule . /index.php [L]
+	</Directory>
+
+	ErrorLog /var/log/apache2/{{RootFolder}}-error.log
+	LogLevel warn
+	CustomLog /var/log/apache2/{{RootFolder}}-access.log combined
+
+</VirtualHost>
