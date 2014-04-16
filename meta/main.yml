@@ -107,7 +107,7 @@ galaxy_info:
   #- cloud:rax
   #- database
   #- database:nosql
-  #- database:sql
+  - database:sql
   #- development
   #- monitoring
   #- networking
